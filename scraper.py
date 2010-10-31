@@ -22,17 +22,26 @@ def slugfy(text, separator):
 
 
 def main(user,passwd,blogid):
-   basedir = os.getcwd()
    d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=10')
 
+   subprocess.call(['mkdir','-p',blogid])
+   os.chdir(os.path.join(os.getcwd(),blogid))
+   basedir = os.getcwd()
    for entry in d.entries:
        titulo = slugfy(entry.title,'-')
-       print titulo
        html = entry.content[0].value
        soup = BeautifulSoup(html)
        enlaces = soup.findAll(href=re.compile("megaupload|rapidshare"))
-       subprocess.call(['mkdir',titulo])
+       subprocess.call(['mkdir','-p',titulo])
        os.chdir(os.path.join(basedir,titulo))
+
+       pretty_html = soup.prettify()
+       output = open('info.html', 'wb')
+       output.write(pretty_html)
+       output.close()
+
+
+
        for enlace in enlaces:
            url = enlace['href']
 	   subprocess.call(['plowdown','-a',user + ':' + passwd,url])
