@@ -22,7 +22,7 @@ def slugfy(text, separator):
 
 
 def main(user,passwd,blogid):
-   d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=10')
+   d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=10000000')
 
    subprocess.call(['mkdir','-p',blogid])
    os.chdir(os.path.join(os.getcwd(),blogid))
