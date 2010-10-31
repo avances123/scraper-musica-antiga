@@ -24,7 +24,7 @@ def slugfy(text, separator):
 def main(user,passwd,blogid):
    basedir = os.getcwd()
    d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=10')
-   print 'http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=1000000000'
+
    for entry in d.entries:
        titulo = slugfy(entry.title,'-')
        print titulo
@@ -36,6 +36,7 @@ def main(user,passwd,blogid):
        for enlace in enlaces:
            url = enlace['href']
 	   subprocess.call(['plowdown','-a',user + ':' + passwd,url])
+       os.chdir(basedir)
 
 
 
