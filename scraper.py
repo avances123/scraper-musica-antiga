@@ -21,8 +21,9 @@ def slugfy(text, separator):
 
 
 
-def main(user,passwd,blogid = '8625828710657758692'):
-   d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=1000000000')
+def main(user,passwd,blogid):
+   basedir = os.getcwd()
+   d = feedparser.parse('http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=10')
    print 'http://www.blogger.com/feeds/' + blogid + '/posts/default?max-results=1000000000'
    for entry in d.entries:
        titulo = slugfy(entry.title,'-')
@@ -30,10 +31,11 @@ def main(user,passwd,blogid = '8625828710657758692'):
        html = entry.content[0].value
        soup = BeautifulSoup(html)
        enlaces = soup.findAll(href=re.compile("megaupload|rapidshare"))
+       subprocess.call(['mkdir',titulo])
+       os.chdir(os.path.join(basedir,titulo))
        for enlace in enlaces:
-           print "mkdir " + titulo
-           subprocess.call(['mkdir',titulo])
            url = enlace['href']
+	   subprocess.call(['plowdown','-a',user + ':' + passwd,url])
 
 
 
@@ -41,6 +43,6 @@ def main(user,passwd,blogid = '8625828710657758692'):
 if __name__ == '__main__':
     user = sys.argv[1]
     passwd = sys.argv[2]
-    blogid = sys.argv[3]
+    blogid = '8625828710657758692'
     main(user,passwd,blogid)
 
